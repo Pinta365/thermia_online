@@ -1,6 +1,6 @@
 import { configureUrl, log } from './utils.ts';
 import { authorize } from './auth_flow.ts';
-import * as types from 'types/auth.ts';
+import * as types from './types/auth.ts';
 
 export interface requestOptions {
     headers?: Record<string, string>;

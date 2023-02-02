@@ -1,4 +1,4 @@
-import * as types from 'types/api.ts';
+import * as types from './types/api.ts';
 import { requestOptions, Thermia_base } from './Thermia_base.ts';
 
 class Thermia extends Thermia_base {
