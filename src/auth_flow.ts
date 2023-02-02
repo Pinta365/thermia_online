@@ -1,6 +1,6 @@
-import base64 from 'base64';
+import base64 from 'https://deno.land/x/b64@1.1.25/src/base64.js';
 import { azure, extractSettings, generateString } from './utils.ts';
-import { wrapFetch } from 'wrapFetch';
+import { wrapFetch } from 'https://deno.land/x/another_cookiejar@v5.0.2/mod.ts';
 
 interface AuthorizationInfo {
     access_token: string;
