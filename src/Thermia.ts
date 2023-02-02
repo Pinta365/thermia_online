@@ -78,8 +78,8 @@ class Thermia extends Thermia_base {
     getDataHistoryAvailableRegisters(
         installationId: number,
         options?: requestOptions,
-        periodStart?: Date,
-        periodEnd?: Date,
+        periodStart?: string,
+        periodEnd?: string,
     ): Promise<types.DataHistoryAvailableRegister[]> {
         if (periodStart || periodEnd) {
             let params = '?';
@@ -101,8 +101,8 @@ class Thermia extends Thermia_base {
         registerId: number,
         resolution: 'minute' | 'hour' | 'day' | 'month' = 'minute',
         options?: requestOptions,
-        periodStart?: Date,
-        periodEnd?: Date,
+        periodStart?: string,
+        periodEnd?: string,
     ): Promise<types.DataHistoryRegister> {
         if (periodStart || periodEnd) {
             let params = '?';
