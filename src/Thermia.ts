@@ -44,7 +44,7 @@ class Thermia extends Thermia_base {
         if (onlyActiveAlarms || take) {
             let params = '?';
             if (onlyActiveAlarms) {
-                params += 'onlyActiveAlarms=' + onlyActiveAlarms;
+                params += 'onlyActiveAlarms=' + onlyActiveAlarms +'&';
             }
             if (take) {
                 params += 'take=' + take;
@@ -84,7 +84,7 @@ class Thermia extends Thermia_base {
         if (periodStart || periodEnd) {
             let params = '?';
             if (periodStart) {
-                params += 'periodStart=' + periodStart;
+                params += 'periodStart=' + periodStart + '&';
             }
             if (periodEnd) {
                 params += 'periodEnd=' + periodEnd;
@@ -107,7 +107,7 @@ class Thermia extends Thermia_base {
         if (periodStart || periodEnd) {
             let params = '?';
             if (periodStart) {
-                params += 'periodStart=' + periodStart;
+                params += 'periodStart=' + periodStart + '&';
             }
             if (periodEnd) {
                 params += 'periodEnd=' + periodEnd;
