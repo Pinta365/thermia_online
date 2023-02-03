@@ -13,8 +13,8 @@ const dataGroups = await thermia.getDataHistoryAvailableRegisters(installationId
 //...
 
 // Get history for outdoor temperature between the 2023-01-25-2023-01-26 per hour and print the data.
-const startDate = new Date('2023-01-25').toJSON();
-const endDate = new Date('2023-01-26').toJSON();
-const history = await thermia.getDataHistoryForRegister(installationId, 2000, 'hour', undefined, startDate, endDate)
+const periodStart = new Date('2023-01-25').toJSON();
+const periodEnd = new Date('2023-01-26').toJSON();
+const history = await thermia.getDataHistoryForRegister(installationId, 2000, 'hour', undefined, periodStart, periodEnd);
 
 console.table(history.data);

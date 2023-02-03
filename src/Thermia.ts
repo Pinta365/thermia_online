@@ -1,134 +1,98 @@
 import * as types from './types/api.ts';
-import { requestOptions, Thermia_base } from './Thermia_base.ts';
+import { Thermia_base } from './Thermia_base.ts';
 
 class Thermia extends Thermia_base {
     constructor(username: string, password: string) {
         super(username, password);
     }
 
-    getCurrentUser(options?: requestOptions): Promise<types.CurrentUser> {
-        return this.get('/api/v1/users/current', this.accessToken, options);
+    getCurrentUser(): Promise<types.CurrentUser> {
+        return this.get('/api/v1/users/current', this.accessToken);
     }
 
-    getInstallations(offset?: number, limit?: number, options?: requestOptions): Promise<types.InstallationsInfo[]> {
-        if (offset || limit) {
-            return this.get('/api/v1/InstallationsInfo', this.accessToken, {
-                parameters: { offset: offset?.toString() || '0', limit: limit?.toString() || '10' },
-            });
-        } else {
-            return this.get('/api/v1/InstallationsInfo', this.accessToken, options);
-        }
+    getInstallations(offset?: number, limit?: number): Promise<types.InstallationsInfo[]> {
+        const params = { offset: offset?.toString() || '0', limit: limit?.toString() || '10' };
+        return this.get('/api/v1/InstallationsInfo', this.accessToken, {
+            parameters: params,
+        });
     }
 
-    getInstallationDetail(installationId: number, options?: requestOptions): Promise<types.InstallationDetail> {
-        return this.get('/api/v1/installations/' + installationId, this.accessToken, options);
+    getInstallationDetail(installationId: number): Promise<types.InstallationDetail> {
+        return this.get('/api/v1/installations/' + installationId, this.accessToken);
     }
 
-    getInstallationStatus(installationId: number, options?: requestOptions): Promise<types.InstallationStatus> {
-        return this.get('/api/v1/installationstatus/' + installationId + '/status', this.accessToken, options);
+    getInstallationStatus(installationId: number): Promise<types.InstallationStatus> {
+        return this.get('/api/v1/installationstatus/' + installationId + '/status', this.accessToken);
     }
 
-    getInstallationIsOnline(installationId: number, options?: requestOptions): Promise<boolean> {
-        return this.get('/api/v1/installationstatus/' + installationId + '/isonline', this.accessToken, options);
+    getInstallationIsOnline(installationId: number): Promise<boolean> {
+        return this.get('/api/v1/installationstatus/' + installationId + '/isonline', this.accessToken);
     }
 
-    getInstallationUsers(installationId: number, options?: requestOptions): Promise<types.InstallationUser[]> {
-        return this.get('/api/v1/installationUsers/installation/' + installationId, this.accessToken, options);
+    getInstallationUsers(installationId: number): Promise<types.InstallationUser[]> {
+        return this.get('/api/v1/installationUsers/installation/' + installationId, this.accessToken);
     }
 
-    getInstallationEventsStatus(installationId: number, options?: requestOptions) {
-        return this.get('/api/v1/installation/' + installationId + '/events/status', this.accessToken, options);
+    getInstallationEventsStatus(installationId: number) {
+        return this.get('/api/v1/installation/' + installationId + '/events/status', this.accessToken);
     }
 
     getInstallationEvents(installationId: number, onlyActiveAlarms?: boolean, take?: number) {
-        if (onlyActiveAlarms || take) {
-            let params = '?';
-            if (onlyActiveAlarms) {
-                params += 'onlyActiveAlarms=' + onlyActiveAlarms +'&';
-            }
-            if (take) {
-                params += 'take=' + take;
-            }
-            return this.get('/api/v1/installation/' + installationId + '/events' + params, this.accessToken);
-        } else {
-            return this.get('/api/v1/installation/' + installationId + '/events', this.accessToken);
-        }
+        const params = {
+            onlyActiveAlarms: (onlyActiveAlarms ? String(onlyActiveAlarms) : ''),
+            take: take?.toString() || '',
+        };
+        return this.get('/api/v1/installation/' + installationId + '/events', this.accessToken, {
+            parameters: params,
+        });
     }
 
-    getRegisterGroups(profileId: number, options?: requestOptions): Promise<types.RegisteredGroup[]> {
-        return this.get('/api/v1/installationprofiles/' + profileId + '/groups', this.accessToken, options);
+    getRegisterGroups(profileId: number): Promise<types.RegisteredGroup[]> {
+        return this.get('/api/v1/installationprofiles/' + profileId + '/groups', this.accessToken);
     }
 
-    getRegisterGroupData(installationId: number, group: string, options?: requestOptions): Promise<types.Register[]> {
+    getRegisterGroupData(installationId: number, group: string): Promise<types.Register[]> {
         return this.get(
             '/api/v1/Registers/Installations/' + installationId + '/Groups/' + group,
             this.accessToken,
-            options,
         );
     }
 
-    getDataHistoryYearsAvailable(installationId: number, options?: requestOptions): Promise<number[]> {
+    getDataHistoryYearsAvailable(installationId: number): Promise<number[]> {
         return this.get(
             '/api/v1/DataHistory/Download/installation/' + installationId + '/yearsAvailable',
             this.accessToken,
-            options,
         );
     }
 
     getDataHistoryAvailableRegisters(
         installationId: number,
-        options?: requestOptions,
-        periodStart?: string,
-        periodEnd?: string,
+        periodStart: string,
+        periodEnd: string,
     ): Promise<types.DataHistoryAvailableRegister[]> {
-        if (periodStart || periodEnd) {
-            let params = '?';
-            if (periodStart) {
-                params += 'periodStart=' + periodStart + '&';
-            }
-            if (periodEnd) {
-                params += 'periodEnd=' + periodEnd;
-            }
-            //+ '?periodStart=2023-01-21T00:00&periodEnd=2023-01-21T23:59'
-            return this.get('/api/v1/DataHistory/installation/' + installationId + params, this.accessToken, options);
-        } else {
-            return this.get('/api/v1/DataHistory/installation/' + installationId, this.accessToken, options);
-        }
+        const params = { periodStart, periodEnd };
+        return this.get('/api/v1/DataHistory/installation/' + installationId, this.accessToken, {
+            parameters: params,
+        });
     }
 
     getDataHistoryForRegister(
         installationId: number,
         registerId: number,
         resolution: 'minute' | 'hour' | 'day' | 'month' = 'minute',
-        options?: requestOptions,
-        periodStart?: string,
-        periodEnd?: string,
+        periodStart: string,
+        periodEnd: string,
     ): Promise<types.DataHistoryRegister> {
-        if (periodStart || periodEnd) {
-            let params = '?';
-            if (periodStart) {
-                params += 'periodStart=' + periodStart + '&';
-            }
-            if (periodEnd) {
-                params += 'periodEnd=' + periodEnd;
-            }
-            return this.get(
-                '/api/v1/DataHistory/installation/' + installationId + '/register/' + registerId + '/' + resolution +
-                    params,
-                this.accessToken,
-                options,
-            );
-        } else {
-            return this.get(
-                '/api/v1/DataHistory/installation/' + installationId + '/register/' + registerId + '/' + resolution,
-                this.accessToken,
-                options,
-            );
-        }
+        const params = { periodStart, periodEnd };
+        return this.get(
+            '/api/v1/DataHistory/installation/' + installationId + '/register/' + registerId + '/' + resolution,
+            this.accessToken,
+            { parameters: params },
+        );
     }
 
-    getConnectionHistory(installationId: number, options?: requestOptions) {
-        return this.get('/api/v1/connectionHistory/installation/' + installationId, this.accessToken, options); //?periodStart=2023-01-21T00:00:00&periodEnd=2023-01-21T23:59:59
+    getConnectionHistory(installationId: number) {
+        return this.get('/api/v1/connectionHistory/installation/' + installationId, this.accessToken); //?periodStart=2023-01-21T00:00:00&periodEnd=2023-01-21T23:59:59
     }
 
     async getHeatingEffect(installationId: number) {

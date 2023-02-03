@@ -1,8 +1,4 @@
 {
-    "tasks": {
-        
-    },
-    "compilerOptions": {},
     "fmt": {
         "options": {
             "useTabs": false,
