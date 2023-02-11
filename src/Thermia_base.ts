@@ -7,6 +7,11 @@ export interface requestOptions {
     parameters?: Record<string, string>;
 }
 
+interface configurationData {
+    apiBaseUrl: string;
+    [key: string]: unknown;
+}
+
 export class Thermia_base {
     username: string;
     password: string;
@@ -32,7 +37,7 @@ export class Thermia_base {
 
     async initialize(localize?: types.SupportedLocales) {
         //fetching API base url, can possibly also fetch the auth urls from here.
-        const conf = await (await fetch(configureUrl)).json();
+        const conf: configurationData = await (await fetch(configureUrl)).json() as configurationData;
         this.apiBaseUrl = conf.apiBaseUrl;
         await this.login();
 

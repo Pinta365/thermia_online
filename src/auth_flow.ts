@@ -49,7 +49,6 @@ export async function authorize(user: string, password: string): Promise<Authori
     await fetch(selfAssertedBuildUrl, {
         method: 'POST',
         mode: 'cors',
-        cache: 'no-cache',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-Csrf-Token': csrf,
@@ -73,7 +72,6 @@ export async function authorize(user: string, password: string): Promise<Authori
     const fetchToken: Response = await fetch(azure.tokenUrl, {
         method: 'POST',
         mode: 'cors',
-        cache: 'no-cache',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -86,6 +84,6 @@ export async function authorize(user: string, password: string): Promise<Authori
             'grant_type': 'authorization_code',
         }),
     });
-    const tokenResult: AuthorizationInfo = await fetchToken.json();
+    const tokenResult: AuthorizationInfo = await fetchToken.json() as AuthorizationInfo;
     return tokenResult;
 }
