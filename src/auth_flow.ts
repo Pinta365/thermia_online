@@ -1,4 +1,5 @@
-import { base64, wrapFetch } from "../depts.ts";
+import { base64 } from "../depts.ts";
+import { fetchWrapper } from "./fetch_wrapper.ts";
 import { azure, extractSettings, generateString } from "./utils.ts";
 
 interface AuthorizationInfo {
@@ -17,7 +18,7 @@ interface AuthorizationInfo {
 }
 
 export async function authorize(user: string, password: string): Promise<AuthorizationInfo> {
-    const fetch = wrapFetch();
+    const fetch = fetchWrapper();
     const codeChallenge: string = generateString(43);
     const codeChallengeB64url: string = base64.fromArrayBuffer(
         await crypto.subtle.digest("SHA-256", new TextEncoder().encode(codeChallenge)),

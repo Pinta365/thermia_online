@@ -1,28 +1,28 @@
-const cookies = Array<Cookie>();
-
-function getCookieString() {
-    const cookiesToSend = cookies
-        .map((c) => c.getThisCookieString())
-        .join("; ");
-    return cookiesToSend;
+interface Cookie {
+    cookieName: string;
+    cookieContent: string;
 }
 
-class Cookie {
-    cookie: string | undefined;
-
-    constructor(cookie?: string) {
-        if (cookie) {
-            this.cookie = cookie;
-        }
-    }
-
-    getThisCookieString() {
-        return `${this.cookie || ""}`;
-    }
-}
-
-export function wrapFetch(): typeof fetch {
+export function fetchWrapper(): typeof fetch {
     const fetch = globalThis.fetch;
+    const cookies = Array<Cookie>();
+
+    function setCookie(cookieString: string) {
+        const parts = cookieString.split("=");
+        const cookie: Cookie = { cookieName: parts[0], cookieContent: parts.join("=") };
+
+        for (const index in cookies) {
+            if (parts[0] === cookies[index].cookieName) {
+                cookies.splice(index as unknown as number, 1, cookie);
+                return;
+            }
+        }
+        cookies.push(cookie);
+    }
+
+    function getCookies() {
+        return cookies.map((c) => c.cookieContent).join("; ");
+    }
 
     async function wrappedFetch(
         input: RequestInfo | URL,
@@ -31,7 +31,6 @@ export function wrapFetch(): typeof fetch {
         const interceptedOptions = {
             ...options,
         };
-
         const reqHeaders = new Headers((input as Request).headers || {});
 
         if (options?.headers) {
@@ -40,24 +39,23 @@ export function wrapFetch(): typeof fetch {
             });
         }
 
-        reqHeaders.set("cookie", getCookieString());
+        reqHeaders.set("cookie", getCookies());
 
         interceptedOptions.headers = reqHeaders;
 
         const response = await fetch(input, interceptedOptions as RequestInit);
 
-        if (cookies.length < 4) {
-            response.headers.forEach((value, key) => {
-                if (key.toLowerCase() === "set-cookie") {
-                    cookies.push(new Cookie(value));
-                }
-            });
-        }
+        response.headers.forEach((value, key) => {
+            if (key.toLowerCase() === "set-cookie") {
+                setCookie(value);
+            }
+        });
 
         const redirectUrl = response.headers.get("location");
         if (!redirectUrl) {
             return response;
         }
+
         return await wrappedFetch(redirectUrl, interceptedOptions as RequestInit);
     }
     return wrappedFetch;
