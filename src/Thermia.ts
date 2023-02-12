@@ -1,5 +1,5 @@
-import * as types from './types/api.ts';
-import { Thermia_base } from './Thermia_base.ts';
+import * as types from "./types/api.ts";
+import { Thermia_base } from "./Thermia_base.ts";
 
 class Thermia extends Thermia_base {
     constructor(username: string, password: string) {
@@ -7,60 +7,60 @@ class Thermia extends Thermia_base {
     }
 
     getCurrentUser(): Promise<types.CurrentUser> {
-        return this.get('/api/v1/users/current', this.accessToken);
+        return this.get("/api/v1/users/current", this.accessToken);
     }
 
     getInstallations(offset?: number, limit?: number): Promise<types.InstallationsInfo[]> {
-        const params = { offset: offset?.toString() || '0', limit: limit?.toString() || '10' };
-        return this.get('/api/v1/InstallationsInfo', this.accessToken, {
+        const params = { offset: offset?.toString() || "0", limit: limit?.toString() || "10" };
+        return this.get("/api/v1/InstallationsInfo", this.accessToken, {
             parameters: params,
         });
     }
 
     getInstallationDetail(installationId: number): Promise<types.InstallationDetail> {
-        return this.get('/api/v1/installations/' + installationId, this.accessToken);
+        return this.get("/api/v1/installations/" + installationId, this.accessToken);
     }
 
     getInstallationStatus(installationId: number): Promise<types.InstallationStatus> {
-        return this.get('/api/v1/installationstatus/' + installationId + '/status', this.accessToken);
+        return this.get("/api/v1/installationstatus/" + installationId + "/status", this.accessToken);
     }
 
     getInstallationIsOnline(installationId: number): Promise<boolean> {
-        return this.get('/api/v1/installationstatus/' + installationId + '/isonline', this.accessToken);
+        return this.get("/api/v1/installationstatus/" + installationId + "/isonline", this.accessToken);
     }
 
     getInstallationUsers(installationId: number): Promise<types.InstallationUser[]> {
-        return this.get('/api/v1/installationUsers/installation/' + installationId, this.accessToken);
+        return this.get("/api/v1/installationUsers/installation/" + installationId, this.accessToken);
     }
 
     getInstallationEventsStatus(installationId: number) {
-        return this.get('/api/v1/installation/' + installationId + '/events/status', this.accessToken);
+        return this.get("/api/v1/installation/" + installationId + "/events/status", this.accessToken);
     }
 
     getInstallationEvents(installationId: number, onlyActiveAlarms?: boolean, take?: number) {
         const params = {
-            onlyActiveAlarms: (onlyActiveAlarms ? String(onlyActiveAlarms) : ''),
-            take: take?.toString() || '',
+            onlyActiveAlarms: (onlyActiveAlarms ? String(onlyActiveAlarms) : ""),
+            take: take?.toString() || "",
         };
-        return this.get('/api/v1/installation/' + installationId + '/events', this.accessToken, {
+        return this.get("/api/v1/installation/" + installationId + "/events", this.accessToken, {
             parameters: params,
         });
     }
 
     getRegisterGroups(profileId: number): Promise<types.RegisteredGroup[]> {
-        return this.get('/api/v1/installationprofiles/' + profileId + '/groups', this.accessToken);
+        return this.get("/api/v1/installationprofiles/" + profileId + "/groups", this.accessToken);
     }
 
     getRegisterGroupData(installationId: number, group: string): Promise<types.Register[]> {
         return this.get(
-            '/api/v1/Registers/Installations/' + installationId + '/Groups/' + group,
+            "/api/v1/Registers/Installations/" + installationId + "/Groups/" + group,
             this.accessToken,
         );
     }
 
     getDataHistoryYearsAvailable(installationId: number): Promise<number[]> {
         return this.get(
-            '/api/v1/DataHistory/Download/installation/' + installationId + '/yearsAvailable',
+            "/api/v1/DataHistory/Download/installation/" + installationId + "/yearsAvailable",
             this.accessToken,
         );
     }
@@ -71,7 +71,7 @@ class Thermia extends Thermia_base {
         periodEnd: string,
     ): Promise<types.DataHistoryAvailableRegister[]> {
         const params = { periodStart, periodEnd };
-        return this.get('/api/v1/DataHistory/installation/' + installationId, this.accessToken, {
+        return this.get("/api/v1/DataHistory/installation/" + installationId, this.accessToken, {
             parameters: params,
         });
     }
@@ -79,20 +79,20 @@ class Thermia extends Thermia_base {
     getDataHistoryForRegister(
         installationId: number,
         registerId: number,
-        resolution: 'minute' | 'hour' | 'day' | 'month' = 'minute',
+        resolution: "minute" | "hour" | "day" | "month" = "minute",
         periodStart: string,
         periodEnd: string,
     ): Promise<types.DataHistoryRegister> {
         const params = { periodStart, periodEnd };
         return this.get(
-            '/api/v1/DataHistory/installation/' + installationId + '/register/' + registerId + '/' + resolution,
+            "/api/v1/DataHistory/installation/" + installationId + "/register/" + registerId + "/" + resolution,
             this.accessToken,
             { parameters: params },
         );
     }
 
     getConnectionHistory(installationId: number) {
-        return this.get('/api/v1/connectionHistory/installation/' + installationId, this.accessToken); //?periodStart=2023-01-21T00:00:00&periodEnd=2023-01-21T23:59:59
+        return this.get("/api/v1/connectionHistory/installation/" + installationId, this.accessToken); //?periodStart=2023-01-21T00:00:00&periodEnd=2023-01-21T23:59:59
     }
 
     async getHeatingEffect(installationId: number) {
@@ -115,7 +115,7 @@ class Thermia extends Thermia_base {
             const newValue = (await this.getInstallationStatus(installationId)).heatingEffect;
 
             if (newValue === value) {
-                return { status: 'ok', oldValue: oldValue, newValue: newValue };
+                return { status: "ok", oldValue: oldValue, newValue: newValue };
             } else {
                 throw new Error(`Error setting the new target value '${value}'.`);
             }
@@ -126,11 +126,11 @@ class Thermia extends Thermia_base {
 
     setRegisterValue(installationId: number, registerIndex: number, registervalue: number | string) {
         const body = {
-            clientUuid: '8581d76b-1fbf-4857-8b80-757fa27140f6',
+            clientUuid: "8581d76b-1fbf-4857-8b80-757fa27140f6",
             registerIndex: registerIndex,
             registervalue: registervalue,
         };
-        return this.post('/api/v1/Registers/Installations/' + installationId + '/Registers', this.accessToken, body);
+        return this.post("/api/v1/Registers/Installations/" + installationId + "/Registers", this.accessToken, body);
     }
 }
 

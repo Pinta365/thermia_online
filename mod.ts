@@ -1,3 +1,3 @@
-import Thermia from './src/Thermia.ts';
+import Thermia from "./src/Thermia.ts";
 
 export { Thermia };

@@ -1,6 +1,6 @@
-import { configureUrl, log } from './utils.ts';
-import { authorize } from './auth_flow.ts';
-import * as types from './types/auth.ts';
+import { configureUrl, log } from "./utils.ts";
+import { authorize } from "./auth_flow.ts";
+import * as types from "./types/auth.ts";
 
 export interface requestOptions {
     headers?: Record<string, string>;
@@ -26,13 +26,13 @@ export class Thermia_base {
         this.username = username;
         this.password = password;
         this.loggedIn = false;
-        this.accessToken = '';
-        this.apiBaseUrl = '';
+        this.accessToken = "";
+        this.apiBaseUrl = "";
         this.localeSet = false;
-        this.locale = '';
+        this.locale = "";
         this.translationTable = <types.TranslationTable> {};
 
-        log('Thermia class instantiated.');
+        log("Thermia class instantiated.");
     }
 
     async initialize(localize?: types.SupportedLocales) {
@@ -56,7 +56,7 @@ export class Thermia_base {
         const authorization = await authorize(this.username, this.password);
         this.accessToken = authorization.access_token;
         this.loggedIn = true;
-        log('Done authenticating.');
+        log("Done authenticating.");
         return this.loggedIn;
     }
 
@@ -89,21 +89,21 @@ export class Thermia_base {
     }
 
     getLocalizationData(culture: types.SupportedLocales): Promise<types.LocaleData> {
-        return this.get('/api/v1/localization/' + culture, this.accessToken);
+        return this.get("/api/v1/localization/" + culture, this.accessToken);
     }
 
     // deno-lint-ignore no-explicit-any
     async get(url: string, accessToken: string, options?: requestOptions): Promise<any> {
         if (!this.loggedIn) {
-            log('Thermia is not logged in.');
+            log("Thermia is not logged in.");
             await this.login();
         }
 
         const defaultOptions = {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken,
             },
         };
 
@@ -112,7 +112,7 @@ export class Thermia_base {
         }
 
         const finalizedUrl = this.apiBaseUrl + url +
-            (options?.parameters ? '?' + (new URLSearchParams(options?.parameters)).toString() : '');
+            (options?.parameters ? "?" + (new URLSearchParams(options?.parameters)).toString() : "");
         log(`Fetching '${finalizedUrl}'`);
         const response = await fetch(finalizedUrl, defaultOptions);
 
@@ -131,15 +131,15 @@ export class Thermia_base {
         // deno-lint-ignore no-explicit-any
     ): Promise<any> {
         if (!this.loggedIn) {
-            log('Thermia is not logged in.');
+            log("Thermia is not logged in.");
             await this.login();
         }
 
         const defaultOptions = {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken,
             },
             body: JSON.stringify(body),
         };
@@ -149,7 +149,7 @@ export class Thermia_base {
         }
 
         const finalizedUrl = this.apiBaseUrl + url +
-            (options?.parameters ? '?' + (new URLSearchParams(options?.parameters)).toString() : '');
+            (options?.parameters ? "?" + (new URLSearchParams(options?.parameters)).toString() : "");
         log(`Fetching '${finalizedUrl}'`);
         const response = await fetch(finalizedUrl, defaultOptions);
 

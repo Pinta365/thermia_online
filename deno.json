@@ -1,13 +1,11 @@
-{   "tasks": {
-    "build_npm": "deno run -A scripts/build_npm.ts"
-},
+{
+    "tasks": {
+        "build_npm": "deno run -A scripts/build_npm.ts"
+    },
     "fmt": {
         "options": {
-            "useTabs": false,
             "lineWidth": 120,
-            "indentWidth": 4,
-            "singleQuote": true,
-            "proseWrap": "preserve"
+            "indentWidth": 4
         }
     }
 }
