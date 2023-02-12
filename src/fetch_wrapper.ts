@@ -3,7 +3,7 @@ interface Cookie {
     cookieContent: string;
 }
 
-export function fetchWrapper(): typeof fetch {
+export function fetchWrapper() {
     const fetch = globalThis.fetch;
     const cookies = Array<Cookie>();
 
@@ -25,7 +25,7 @@ export function fetchWrapper(): typeof fetch {
     }
 
     async function wrappedFetch(
-        input: RequestInfo | URL,
+        input: Request | string,
         options?: RequestInit,
     ): Promise<Response> {
         const interceptedOptions = {
